@@ -1,0 +1,29 @@
+.iconFloatLeft {
+    margin-left: 15px;
+    padding: 5px;
+    background-color: #e6f4ea;
+    border-radius: 5px;
+}
+
+.eyeSlash {
+    cursor: pointer;
+    color: red;
+}
+
+.faEye {
+    position: relative;
+    cursor: pointer;
+    color: green;
+}
+
+.row {
+    height: 60px;
+}
+
+.increment {
+    color: green;
+}
+
+.decrement {
+    color: red;
+}
