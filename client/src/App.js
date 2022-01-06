@@ -1,25 +1,47 @@
-import logo from './logo.svg';
+import React, {useEffect, useRef} from "react";
 import './App.css';
+import Header from "./Components/Header/Header";
+import {useDispatch, useSelector} from "react-redux";
+import * as io from "socket.io-client";
+import {setFilteredTickers, setTickers} from "./Redux/redusers/redusers";
+import {CustomizedTables} from "./Components/Table";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const socket = io.connect('http://localhost:4000');
+socket.emit('start');
+
+const App = () => {
+
+    const dispatch = useDispatch();
+    const {prices: tickers, filteredTickers} = useSelector(state => state.priceTicker);
+    const prevValue = useRef([]);
+
+    useEffect(() => {
+        if (tickers.length > 0) {
+            socket.on('ticker', response => {
+                    dispatch(setTickers(response));
+                }
+            );
+
+            prevValue.current = tickers;
+        }
+    }, [tickers]);
+
+    useEffect(() => {
+        prevValue.current = tickers;
+    }, [tickers]);
+
+
+    return (
+        <div>
+            <div className="App">
+                <Header/>
+                <CustomizedTables
+                    prevValue={prevValue.current}
+                    tickers={tickers}
+                />
+            </div>
+        </div>
+    );
 }
 
 export default App;
